@@ -3,16 +3,16 @@
 #include<cstdio>
 #define re register
 const int M=1e6+5;
-int n,m,a[M],maxx[M],minn[M],
+int n,len,a[M],maxx[M],minn[M],
 	head,tail,que[M],num[M];
 void dp_min()
 {
 	head=1,tail=0;
-//this setting is to deal with the front elements which are in ranges that shorter than 'm'
+//this setting is to deal with the front elements which are in ranges that shorter than len
 	que[tail]=num[head]=0; //inlitialazation
 	for(re int i=1;i<=n;i++)
 	{
-		while(num[head]<i-m+1&&head<=tail)	head++; //the first element isn't in the range,pop it
+		while(num[head]<i-len+1&&head<=tail)	head++; //the first element isn't in the range,pop it
 		while(que[tail]>=a[i]&&head<=tail)	tail--; //dealing the present element 
 //if it is fixed(not smaller than the last one),pop the last one by dealing the pointer'tail'
 		num[++tail]=i;
@@ -26,7 +26,7 @@ void dp_max() //almost the same
 	que[tail]=num[head]=0;
 	for(re int i=1;i<=n;i++)
 	{
-		while(num[head]<i-m+1&&head<=tail)	head++;
+		while(num[head]<i-len+1&&head<=tail)	head++;
 		while(que[tail]<=a[i]&&head<=tail)	tail--;
 		num[++tail]=i;
 		que[tail]=a[i];
@@ -35,7 +35,7 @@ void dp_max() //almost the same
 }
 int main()
 {
-	scanf("%d%d",&n,&m); //m refers to the length of the range
+	scanf("%d%d",&n,&len); //len refers to the length of the range
 	for(re int i=1;i<=n;i++)
 		scanf("%d",&a[i]);
 	dp_min();
