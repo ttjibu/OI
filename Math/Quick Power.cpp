@@ -1,14 +1,14 @@
 #include<iostream>
 typedef long long ll;
 using namespace std;
-ll pow(int p,int q) //the key is binary stuffs
+ll pow(int x,int y) //the key is binary stuffs
 {
 	ll ans=1;
-	while(q)
+	while(y)
 	{
-		if(q&1)ans*=p;
-		q>>=1;
-		p*=p;
+		if(y&1)ans*=x;
+		y>>=1;
+		x*=x;
 	}
 	return ans;
 }
