@@ -1,68 +1,72 @@
 #include<cstdio>
-
-const int M=500005;
-int n,m,root,fir[M],cnt,dep[M],f[M][22];
-struct edge{
-	int to,next;
-}a[M<<1];
-inline void add_edge(int x,int y)
+#define re register
+const int M=5e5+5;
+int n,m,root,f[M][22],dep[M],
+	fir[M],to[M<<1],nxt[M<<1],cnt;
+	//f[i][k] refers to the 2^k(th) ancestor of i
+inline void add(const int &x,const int &y)
 {
-	a[++cnt].to=y;
-	a[cnt].next=fir[x];
+	to[++cnt]=y;
+	nxt[cnt]=fir[x];
 	fir[x]=cnt;
-	return ;
 }
-void Deal_first(int u,int father)
+void readin()
 {
-	dep[u]=dep[father]+1;
-	f[u][0]=father;
-	for(int i=1;f[u][i-1]!=0;i++)//
+	re int i,x,y;
+	scanf("%d%d%d",&n,&m,&root);
+	for(i=1;i<n;i++)
 	{
-		f[u][i]=f[f[u][i-1]][i-1];
+		scanf("%d%d",&x,&y);
+		add(x,y),add(y,x);
 	}
-	for(int i=fir[u];i;i=a[i].next)
+}
+void deal_first(int u,int fa)	//build the tree
+{
+	re int i,e,v;
+	dep[u]=dep[fa]+1;
+	for(i=0;i<=19;i++)	//transmit the ancestor
+		f[u][i+1]=f[f[u][i]][i];
+	for(e=fir[u];e;e=nxt[e])
 	{
-		int v=a[i].to;
-		if(v==father)continue;
-		Deal_first(v,u);
+		v=to[e];
+		if(dep[v])continue;
+		f[v][0]=u;
+		deal_first(v,u);
 	}
-	return ;
 }
 int lca(int x,int y)
 {
-	if(dep[x]<dep[y])return lca(y,x);
-	for(int i=20;i>=0;i--)
+	if(dep[x]<dep[y])	return lca(y,x);//keep x as the deepest
+	re int i;
+	for(i=20;i>=0;i--)	//run in reverse order so not to skip the point
 	{
-		if(dep[f[x][i]]>=dep[y])
+		if(dep[f[x][i]]>=dep[y])	//using the binary stuffs
 			x=f[x][i];
-		if(x==y)
+		if(x==y)	//spj when x and y are on the same branch
 			return x;
 	}
-	for(int i=20;i>=0;i--)
-	{
-		if(f[x][i]!=f[y][i])
+	for(i=20;i>=0;i--)	//now x and y are at the same deepth
+	{					//using reverse order as above
+		if(f[x][i]!=f[y][i])	//hop!
 		{
 			x=f[x][i];
 			y=f[y][i];
 		}
 	}
-	return f[x][0];
-	
+	return f[x][0];	//their latest common ancestor
+}
+void query()
+{	
+	for(re int i=1,x,y;i<=m;i++)
+	{
+		scanf("%d%d",&x,&y);
+		printf("%d\n",lca(x,y));
+	}
 }
 int main()
 {
-	scanf("%d%d%d",&n,&m,&root);
-	for(int I=1,x,y;I<n;I++)
-	{
-		scanf("%d%d",&x,&y);
-		add_edge(x,y);
-		add_edge(y,x);
-	}
-	Deal_first(root,0);
-	for(int I=1,p,q;I<=m;I++)
-	{
-		scanf("%d%d",&p,&q);
-		printf("%d\n",lca(p,q));
-	}
+	readin();
+	deal_first(root,0);	//make up a fake father of the root
+	query();
 	return 0;
- } 
+}
