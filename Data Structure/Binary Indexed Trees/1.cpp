@@ -1,3 +1,5 @@
+//modify a point
+//query the sum of a range
 #include<cstdio>
 #define lowbit(a) a&(-a)
 #define re register
