@@ -46,11 +46,11 @@ bool SPFA()
 			{
 				dis[v]=dis[u]+wei[e];
 				if(vis[v])continue;
-        vis[v]=1;
-        que.push(v);
-        t[v]++; //the only difference is record the times of a point entering the queue
-        if(t[v]>n) return true;
-        //more than n times,must have negetive circle
+				vis[v]=1;
+				que.push(v);
+				t[v]++; //the only difference is record the times of a point entering the queue
+				if(t[v]>n) return true;
+				//more than n times,must have negetive circle
 			}
 		}
 	}
